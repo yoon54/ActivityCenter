@@ -1,0 +1,54 @@
+@model Activitys
+ 
+
+<div class="page-title">
+    <h1>Plan an Activity</h1>
+    <a href="/Dashboard"><button class="btn btn-primary">Dashboard</button></a>
+    <div class="btn-group pull-right">
+   
+<a href="/logout"><button class="btn btn-danger">Logout</button></a>
+</div>
+</div>
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control">
+            <span asp-validation-for="Title" style="color: red; font-size: 12px;"></span>
+        </div>
+        <div class="form-group col-sm-6">
+            <label asp-for="Date"></label>
+            <input asp-for="Date" class="form-control">
+            <span asp-validation-for="Date" style="color: red; font-size: 12px;"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label asp-for="Time"></label>
+            <input asp-for="Time" class="form-control">
+            <span asp-validation-for="Time" style="color: red; font-size: 12px;"></span>
+        </div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Duration"></label>
+            <input asp-for="Duration" class="form-control">
+            <span asp-validation-for="Duration" min="0" style="color: red; font-size: 12px;"></span>
+        </div>
+        <div>
+            <div class="form-group">
+                <label asp-for="TimeScale">&nbsp</label>
+                <select class="form-control" style="width: 175px;" name="TimeScale">
+                    <option value="Time Scale" disabled selected>Time Scale</option>
+                    <option value="Minutes">Minute(s)</option>
+                    <option value="Hours">Hour(s)</option>
+                    <option value="Days">Day(s)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control">
+        <span asp-validation-for="Description" style="color: red; font-size: 12px;"></span>
+    </div>
+    <input type="submit" value="Create" class="btn btn-success">
+</form>

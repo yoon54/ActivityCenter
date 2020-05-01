@@ -1,0 +1,79 @@
+@using System.Globalization;
+@model List<Activitys>
+
+<div class="jumbotron">
+    <h1>Activity Center</h1>
+    <h4>Welcome @ViewBag.User.FirstName!</h4>
+    <div class="btn-group pull-right">
+<a href="/logout"><button class="btn btn-danger">Logout</button></a>
+</div>
+</div>
+<a href="/Activitys" class="btn btn-success" style="margin-bottom: 20px;">Create Activity</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Date and Time</th>
+            <th>Duration</th>
+            <th>Activity Coordinator</th>
+            <th>Number of Participants</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            string date_time = e.Date.ToString("MM/dd/yyyy") + " " + e.Time.ToString("HH:mm tt");
+            DateTime newDatetime = DateTime.ParseExact(date_time, "MM/dd/yyyy HH:mm tt", CultureInfo.InvariantCulture);
+            e.ActivityEnd = newDatetime;
+            if(e.TimeScale == "Minutes")
+            {
+                e.ActivityEnd = newDatetime.AddMinutes(@e.Duration);
+            }
+            else if(e.TimeScale =="Hours")
+            {
+                e.ActivityEnd = newDatetime.AddHours(@e.Duration);
+            }
+            else if(e.TimeScale =="Days")
+            {
+                e.ActivityEnd = newDatetime.AddDays(@e.Duration);
+            }
+            else
+            {
+                return;
+            }
+        <tr>
+            <td><a href="/@e.ActivityId">@e.Title</a></td>
+            @if(newDatetime > DateTime.Now)
+            {
+                <td>@newDatetime</td>
+            }
+            else 
+            {
+                int id = @e.ActivityId;
+                Context.Response.Redirect($"/cancel/{id}");
+            }
+            <td>@e.Duration @e.TimeScale</td>
+            <td>@e.Creator.FirstName</td>
+            <td>@e.Guests.Count</td>
+            @if(e.Creator.UserId == ViewBag.User.UserId)
+            {
+                <td><a href="/cancel/@e.ActivityId">Delete</a></td>
+            }
+            else
+            {
+                if( e.Guests.All(g => g.UserId != ViewBag.User.UserId))
+                {
+                    <td><a href="/attend/@e.ActivityId/@ViewBag.User.UserId">Attend</a></td>
+                }
+
+                else if( e.Guests.Any(g => g.UserId == ViewBag.User.UserId))
+                {
+                    <td><a href="/leave/@e.ActivityId/@ViewBag.User.UserId">Not Attend</a></td>
+                }
+            }
+        </tr>
+        }
+    </tbody>
+</table>
